@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 /// <summary>
@@ -13,6 +14,11 @@ public class SkillController : MonoBehaviour
     public KeyCode kcSKill = KeyCode.Mouse0;
     [Header("技能飛行速度"), Range(0, 500)]
     public float speedSkill = 10;
+    [Header("技能冷卻")]
+    public float cdSkill = 3;
+    [Header("技能冷卻圖片與文字")]
+    public Image imgCD;
+    public Text textCD;
     #endregion
 
     #region 欄位：私人
@@ -20,6 +26,14 @@ public class SkillController : MonoBehaviour
     /// 技能次數
     /// </summary>
     private int countSKill = 3;
+    /// <summary>
+    /// 技能計時器
+    /// </summary>
+    private float timerSkill;
+    /// <summary>
+    /// 是否能使用技能
+    /// </summary>
+    private bool canUseSkill = true;
     /// <summary>
     /// 技能物件暫存
     /// </summary>
@@ -57,8 +71,13 @@ public class SkillController : MonoBehaviour
     /// </summary>
     private void Skill()
     {
-        if (Input.GetKeyDown(kcSKill))
+        if (countSKill > 0 && canUseSkill && Input.GetKeyDown(kcSKill))
         {
+            countSKill--;
+            textCD.text = countSKill + "";
+            canUseSkill = false;
+            imgCD.fillAmount = 1;
+
             traSKillTemp = Instantiate(goSkillEffect, transform.position, Quaternion.identity).transform;
 
             posMouse = Input.mousePosition;
@@ -68,6 +87,20 @@ public class SkillController : MonoBehaviour
 
             StopAllCoroutines();
             StartCoroutine(SkillFlyToMousePosition(posMouseWorld));
+        }
+        else if (!canUseSkill)
+        {
+            if (timerSkill < cdSkill)
+            {
+                timerSkill += Time.deltaTime;
+                imgCD.fillAmount = 1 - timerSkill / cdSkill;
+            }
+            else
+            {
+                timerSkill = 0;
+                imgCD.fillAmount = 0;
+                canUseSkill = true;
+            }
         }
     }
 
@@ -81,7 +114,6 @@ public class SkillController : MonoBehaviour
 
         while (dis > 0)
         {
-            print(dis);
             traSKillTemp.position = Vector3.MoveTowards(traSKillTemp.position, posTarget, speedSkill);
             yield return new WaitForSeconds(0.02f);
         }
