@@ -9,31 +9,41 @@ public class BaseEnemy : MonoBehaviour, IChaos
     [Header("等待與走路最小最大時間")]
     public Vector2 v2TimeLimitIdle = new Vector2(0.5f, 3);
     public Vector2 v2TimeLimitWalk = new Vector2(1, 3.5f);
+    [Header("側面時是否翻面")]
+    public bool flipWhenSide;
+
+    [HideInInspector]
+    /// <summary>
+    /// 是否混亂中
+    /// </summary>
+    public bool isChaos;
+    //[HideInInspector]
+    /// <summary>
+    /// 狀態
+    /// </summary>
+    public StateEnemy state;
     #endregion
 
     #region 欄位：私人
     private Rigidbody2D rig;
     private Animator ani;
     private AudioSource aud;
+    private SpriteRenderer spr;
     private float timerIdle;
     private float timeIdle;
     private float timerWalk;
     private float timeWalk;
-    /// <summary>
-    /// 走路方向
-    /// </summary>
-    private Vector3 v3WalkDirection;
     #endregion
 
     #region 欄位：保護
     /// <summary>
-    /// 是否混亂中
+    /// 走路方向
     /// </summary>
-    protected bool isChaos;
+    protected Vector3 v3WalkDirection;
     /// <summary>
-    /// 狀態
+    /// 是否使用技能
     /// </summary>
-    protected StateEnemy state;
+    protected bool useSkill;
     #endregion
 
     #region 事件：私人
@@ -42,15 +52,10 @@ public class BaseEnemy : MonoBehaviour, IChaos
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
         aud = GetComponent<AudioSource>();
+        spr = GetComponent<SpriteRenderer>();
         aud.playOnAwake = false;
 
         FirstIdle();
-    }
-
-    private void Update()
-    {
-        CheckState();
-        UpdateAnimation();
     }
 
     private void FixedUpdate()
@@ -60,12 +65,18 @@ public class BaseEnemy : MonoBehaviour, IChaos
     #endregion
 
     #region 事件：保護
+    protected virtual void Update()
+    {
+        UpdateAnimation();
+        CheckState();
+    }
     #endregion
 
     #region 方法：公開
     public virtual void Chaos()
     {
-
+        state = StateEnemy.chaos;
+        if (isChaos) return;
     }
     #endregion
 
@@ -86,6 +97,10 @@ public class BaseEnemy : MonoBehaviour, IChaos
             case StateEnemy.chaos:
                 break;
             case StateEnemy.skill:
+                Skill();
+                break;
+            case StateEnemy.stop:
+                Stop();
                 break;
             default:
                 Debug.LogWarning("狀態警報！");
@@ -138,6 +153,16 @@ public class BaseEnemy : MonoBehaviour, IChaos
     }
 
     /// <summary>
+    /// 停止狀態
+    /// </summary>
+    private void Stop()
+    {
+        isChaos = true;
+        speed = 0;
+        rig.velocity = Vector3.zero;
+    }
+
+    /// <summary>
     /// 在 Fixed Update 執行走路物理移動
     /// </summary>
     private void WalkFixedUpdate()
@@ -163,15 +188,28 @@ public class BaseEnemy : MonoBehaviour, IChaos
         if (Mathf.Abs(rig.velocity.x) > 0.1f)
         {
             ani.SetFloat("水平", rig.velocity.x);
+            ani.SetFloat("垂直", 0);
+
+            if (flipWhenSide)
+            {
+                spr.flipX = rig.velocity.x > 0 ? true : false;
+            }
         }
         if (Mathf.Abs(rig.velocity.y) > 0.1f)
         {
             ani.SetFloat("垂直", rig.velocity.y);
+            ani.SetFloat("水平", 0);
         }
+
+        ani.SetBool("混亂開關", isChaos);
     }
     #endregion
 
     #region 方法：保護
+    protected virtual void Skill()
+    {
+
+    }
     #endregion
 }
 
@@ -180,5 +218,5 @@ public class BaseEnemy : MonoBehaviour, IChaos
 /// </summary>
 public enum StateEnemy
 {
-    idle, walk, chaos, skill
+    idle, walk, chaos, skill, stop
 }

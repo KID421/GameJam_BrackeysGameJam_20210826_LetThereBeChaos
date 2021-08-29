@@ -16,16 +16,18 @@ public class SkillController : MonoBehaviour
     public float speedSkill = 10;
     [Header("技能冷卻")]
     public float cdSkill = 3;
+    [Header("技能感應半徑")]
+    public float radiusSkill = 1;
     [Header("技能冷卻圖片與文字")]
     public Image imgCD;
     public Text textCD;
-    #endregion
-
-    #region 欄位：私人
     /// <summary>
     /// 技能次數
     /// </summary>
-    private int countSKill = 3;
+    public int countSKill = 3;
+    #endregion
+
+    #region 欄位：私人
     /// <summary>
     /// 技能計時器
     /// </summary>
@@ -56,6 +58,12 @@ public class SkillController : MonoBehaviour
         posMouseWorld.z = 0;
         Gizmos.color = new Color(1, 0, 0, 0.3f);
         Gizmos.DrawSphere(posMouseWorld, 0.3f);
+
+        if (traSKillTemp)
+        {
+            Gizmos.color = new Color(0, 0, 1, 0.3f);
+            Gizmos.DrawSphere(traSKillTemp.position, radiusSkill);
+        }
     }
 
     private void Update()
@@ -114,11 +122,22 @@ public class SkillController : MonoBehaviour
 
         while (dis > 0)
         {
-            traSKillTemp.position = Vector3.MoveTowards(traSKillTemp.position, posTarget, speedSkill);
+            dis = Vector3.Distance(traSKillTemp.position, posTarget);
+            traSKillTemp.position = Vector3.MoveTowards(traSKillTemp.position, posTarget, speedSkill * Time.deltaTime);
             yield return new WaitForSeconds(0.02f);
         }
 
         traSKillTemp.position = posTarget;
+
+        ParticleSystem ps = traSKillTemp.GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule main = ps.main;
+        main.startSpeed = 20;
+        ParticleSystem.EmissionModule emission = ps.emission;
+        yield return new WaitForSeconds(0.1f);
+        emission.rateOverTime = 0;
+
+        Collider2D hit = Physics2D.OverlapCircle(traSKillTemp.position, radiusSkill, 1 << 6);
+        if (hit) hit.GetComponent<IChaos>().Chaos();
     }
     #endregion
 

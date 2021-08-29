@@ -8,9 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - "\u73A9\u5BB6"
   - Water
   - UI
+  - "\u602A\u7269"
+  - "\u7D05\u8272\u7269\u9AD4"
   - 
   - 
   - 
@@ -25,9 +27,7 @@ TagManager:
   - 
   - 
   - 
-  - Layer 1
-  - Layer 2
-  - Layer 3
+  - 
   - 
   - 
   - 

@@ -8,6 +8,7 @@ public class TopDownController : MonoBehaviour
     #region 欄位：公開
     [Header("速度"), Range(0, 100)]
     public float speed;
+    
     #endregion
 
     #region 欄位：私人
@@ -76,6 +77,7 @@ public class TopDownController : MonoBehaviour
             ani.SetFloat("垂直", inputV);
         }
     }
+
     #endregion
 
     #region 方法：公開
