@@ -25,6 +25,8 @@ public class SkillController : MonoBehaviour
     /// 技能次數
     /// </summary>
     public int countSKill = 3;
+    [Header("音效")]
+    public AudioClip soundShoot;
     #endregion
 
     #region 欄位：私人
@@ -48,6 +50,7 @@ public class SkillController : MonoBehaviour
     /// 滑鼠世界座標
     /// </summary>
     private Vector3 posMouseWorld;
+    private AudioSource aud;
     #endregion
 
     #region 事件
@@ -66,6 +69,11 @@ public class SkillController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        aud = GetComponent<AudioSource>();
+    }
+
     private void Update()
     {
         Skill();
@@ -81,6 +89,7 @@ public class SkillController : MonoBehaviour
     {
         if (countSKill > 0 && canUseSkill && Input.GetKeyDown(kcSKill))
         {
+            aud.PlayOneShot(soundShoot, Random.Range(0.7f, 1.2f));
             countSKill--;
             textCD.text = countSKill + "";
             canUseSkill = false;

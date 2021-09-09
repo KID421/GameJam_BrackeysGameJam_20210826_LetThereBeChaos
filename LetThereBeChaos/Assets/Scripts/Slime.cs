@@ -17,6 +17,8 @@ public class Slime : BaseEnemy
 
     public override void Chaos()
     {
+        if (isChaos) return;
+
         base.Chaos();
 
         isChaos = true;

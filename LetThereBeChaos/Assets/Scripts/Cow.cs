@@ -21,6 +21,9 @@ public class Cow : BaseEnemy
     protected override void Update()
     {
         base.Update();
+
+        if (isChaos) return;
+
         CheckPlayer();
     }
 
@@ -49,7 +52,6 @@ public class Cow : BaseEnemy
 
         if (hit)
         {
-            print(hit.name);
             posTarget = hit.transform.position;
             state = StateEnemy.skill;
         }
@@ -81,6 +83,8 @@ public class Cow : BaseEnemy
 
     public override void Chaos()
     {
+        if (isChaos) return;
+
         base.Chaos();
 
         isChaos = true;

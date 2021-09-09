@@ -6,7 +6,7 @@ using UnityEngine;
 public class TopDownController : MonoBehaviour
 {
     #region 欄位：公開
-    [Header("速度"), Range(0, 100)]
+    [Header("速度"), Range(0, 1000)]
     public float speed;
     
     #endregion
@@ -77,9 +77,16 @@ public class TopDownController : MonoBehaviour
             ani.SetFloat("垂直", inputV);
         }
     }
-
     #endregion
 
     #region 方法：公開
+    /// <summary>
+    /// 停止
+    /// </summary>
+    public void Stop()
+    {
+        rig.velocity = Vector3.zero;
+        enabled = false;
+    }
     #endregion
 }

@@ -68,6 +68,8 @@ public class BaseEnemy : MonoBehaviour, IChaos
     protected virtual void Update()
     {
         UpdateAnimation();
+
+        if (isChaos) return;
         CheckState();
     }
     #endregion
@@ -76,7 +78,6 @@ public class BaseEnemy : MonoBehaviour, IChaos
     public virtual void Chaos()
     {
         state = StateEnemy.chaos;
-        if (isChaos) return;
     }
     #endregion
 
@@ -160,6 +161,7 @@ public class BaseEnemy : MonoBehaviour, IChaos
         isChaos = true;
         speed = 0;
         rig.velocity = Vector3.zero;
+        enabled = false;
     }
 
     /// <summary>

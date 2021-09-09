@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 6588502316526219371, guid: 19ab9c2b34369004c913e4ecb6026342,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -260,9 +260,9 @@ MonoBehaviour:
   flipWhenSide: 1
   isChaos: 0
   state: 0
-  speedSprint: 20
+  speedSprint: 30
   checkPlayerSize: 15
-  radiusChaos: 5
+  radiusChaos: 10
   speedChaosMove: 15
 --- !u!114 &1320285803812274021
 MonoBehaviour:
@@ -279,6 +279,9 @@ MonoBehaviour:
   goDeadEffect: {fileID: 7039412071907620473, guid: 1854c8d9addeede4d84615c6041ad42b,
     type: 3}
   layerDead: 7
+  onDead:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1320285804528253349
 GameObject:
   m_ObjectHideFlags: 0
